@@ -16,4 +16,8 @@ export default defineConfig({
       "@": resolve(__dirname, "./src"),
     },
   },
+  // Required for Ionic Framework
+  ssr: {
+    noExternal: ["@ionic/**", "@stencil/**", "ionicons"],
+  },
 });
