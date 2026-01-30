@@ -1,5 +1,6 @@
-import angular from "@nitedani/vite-plugin-angular";
-import { defineConfig } from "vite";
+import { angular } from "@nitedani/vite-plugin-angular/plugin"
+
+import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [angular()],
@@ -14,4 +15,4 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-});
+})
