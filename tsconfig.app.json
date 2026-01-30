@@ -33,7 +33,7 @@
     "allowJs": true,
     "checkJs": false,
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "forceConsistentCasingInFileNames": false,
     "noEmitOnError": false,
     "declaration": false,
