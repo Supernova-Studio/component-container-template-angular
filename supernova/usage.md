@@ -13,7 +13,7 @@ When using the codebase, follow these rules:
 @Component({
   selector: "app-example",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, MatButtonModule],
   template: `...`,
 })
 export class ExampleComponent {}
@@ -31,7 +31,6 @@ export class ExampleComponent {}
 - Prefer template expressions over complex logic in templates
 
 ```html
-<!-- Preferred -->
 @if (isVisible) {
   <div>Content</div>
 }
@@ -39,10 +38,6 @@ export class ExampleComponent {}
 @for (item of items; track item.id) {
   <div>{{ item.name }}</div>
 }
-
-<!-- Avoid -->
-<div *ngIf="isVisible">Content</div>
-<div *ngFor="let item of items">{{ item.name }}</div>
 ```
 
 ### Data Binding
@@ -61,58 +56,129 @@ export class MyComponent {
 }
 ```
 
-## Custom Template
+## Angular Material
 
-This repository is a minimal Angular template with no prescribed UI library. Use it as a blank base to build on.
+This project uses [Angular Material](https://material.angular.io/) (`@angular/material` v19) as its component library. The prebuilt `azure-blue` theme is loaded globally via `src/index.css`, and Material Icons are available via Google Fonts CDN.
 
-### UI & Structure
-- Use standard HTML elements or add any component library you need
-- Import only what you use; keep the app bundle lean
-- App shell is minimal: root component and content—structure pages and layout as you like
-- Prefer semantic HTML (`<header>`, `<main>`, `<nav>`, `<section>`, etc.) for clarity and accessibility
+### How to import Material components
 
-### Theming & Styling
-- Use CSS custom properties in `styles.scss` for global theme tokens (colors, spacing, typography)
-- Keep component styles scoped; use shared variables for consistency
-- No built-in design system—define or adopt one as needed
-
-## Private component library
-
-This project may use a **private/custom component library**. The package name, import paths, and component names in this section are **placeholders**. When you clone or fork this repo, replace them with your actual library details (package name, barrel paths, and component names).
-
-### How to import
-
-- Import components from the library package configured for this project (see the example below for the placeholder used in this repo).
-- Use **standalone** imports: add each component you use into the consuming component’s `imports` array. Do not import entire NgModules unless the library only provides modules.
-- Import only the components you need to keep the bundle small.
-
-**Placeholder configuration (replace with your real library):**
-
-| What | Placeholder | You replace with |
-|------|-------------|-------------------|
-| Package name | `@your-org/your-ui` | Your npm package name (e.g. `@acme/design-system`) |
-| Component names | `YourButton`, `YourCard`, etc. | Actual component names from your library |
-
-### Example
+Import each module you need from its sub-entry point:
 
 ```typescript
-// Replace @your-org/your-ui and YourButton, YourCard with your library’s package and component names
-import { YourButton, YourCard } from "@your-org/your-ui";
-
-@Component({
-  standalone: true,
-  imports: [CommonModule, YourButton, YourCard],
-  template: `
-    <your-card>
-      <your-button>Action</your-button>
-    </your-card>
-  `,
-})
-export class ExampleComponent {}
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatListModule } from "@angular/material/list";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatTableModule } from "@angular/material/table";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 ```
 
-- In templates, use the **selector** your library defines (e.g. `your-button`, `your-card`). If the library uses a different prefix or naming, follow its documentation.
-- If the library exposes a barrel (e.g. `@your-org/your-ui`), prefer importing from that barrel. If it uses subpaths (e.g. `@your-org/your-ui/button`), use those paths as documented by the library.
+Add them to the component's `imports` array:
+
+```typescript
+@Component({
+  standalone: true,
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+  template: `
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>My Card</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Card content here</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>Action</button>
+        <button mat-raised-button color="primary">Primary</button>
+      </mat-card-actions>
+    </mat-card>
+  `,
+})
+export class MyComponent {}
+```
+
+### Icons
+
+Use `<mat-icon>` with the Material Icons font. Browse available icons at https://fonts.google.com/icons.
+
+```html
+<mat-icon>home</mat-icon>
+<mat-icon>settings</mat-icon>
+<mat-icon>chevron_left</mat-icon>
+```
+
+### Common patterns
+
+**Toolbar with sidenav:**
+```typescript
+template: `
+  <mat-sidenav-container>
+    <mat-sidenav [opened]="open" mode="side">
+      <mat-nav-list>
+        @for (item of items; track item.label) {
+          <a mat-list-item>
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar>
+        <button mat-icon-button (click)="open = !open">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>Title</span>
+      </mat-toolbar>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+`
+```
+
+**Form with inputs:**
+```typescript
+imports: [MatFormFieldModule, MatInputModule, FormsModule],
+template: `
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="name" />
+  </mat-form-field>
+`
+```
+
+**Data table:**
+```typescript
+imports: [MatTableModule],
+template: `
+  <table mat-table [dataSource]="data">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+`
+```
+
+## Custom Template
+
+This repository uses Angular Material as its primary UI library. Build on the existing Material foundation rather than introducing additional libraries.
+
+### Theming & Styling
+- The prebuilt `azure-blue` theme is applied globally in `src/index.css`
+- Use CSS custom properties in `index.css` for global theme tokens (colors, spacing, typography)
+- Keep component styles scoped; use shared variables for consistency
+- Use Material's built-in theming where possible (e.g. `color="primary"`)
 
 ## Code Style
 
@@ -141,7 +207,7 @@ src/
 ├── app.component.ts      # Root component (AI generates code here)
 ├── app.config.ts         # Application configuration
 ├── main.ts               # Bootstrap entry point
-├── styles.scss           # Global styles and theme tokens
+├── index.css             # Global styles, Material theme import
 ├── components/           # Shared components
 ├── services/             # Application services
 └── lib/                  # Utilities and helpers
@@ -152,4 +218,5 @@ src/
 1. The `app.component.ts` is where AI-generated code should be placed
 2. Always import `FormsModule` when using `[(ngModel)]`
 3. Zone.js is imported in main.ts and required for Angular change detection
-4. Add and import only the dependencies and UI pieces you need—the template stays unopinionated
+4. Angular Material is pre-installed — use it for buttons, cards, lists, toolbars, icons, etc.
+5. Material Icons are loaded via CDN in `index.html`

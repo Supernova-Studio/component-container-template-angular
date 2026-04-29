@@ -2,7 +2,7 @@
 // This is a component that wraps the application with error handling and message receiving.
 // don't update this file!
 import { Component, inject } from "@angular/core";
-import { SnMessageService } from "./sn-message.service";
+import { SnMessageService } from "./sn-message.service.js";
 
 @Component({
   selector: "sn-prototype",

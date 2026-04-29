@@ -1,0 +1,14 @@
+{
+  "refreshInterval": 30000,
+  "maxActivityItems": 10,
+  "sparklinePoints": 12,
+  "healthThresholds": {
+    "healthy": 80,
+    "warning": 60
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  }
+}
